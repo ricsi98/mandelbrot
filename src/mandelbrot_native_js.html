@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+    <head>
+	    <title>mandelbrot</title>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/7.0.1/math.js"></script>
+    </head>
+    <body>
+
+	    <canvas id="canv" width="1440" height="960">
+
+	<script>
+		const canvas = document.getElementById('canv');
+		const ctx = canvas.getContext('2d');
+
+		let points = [];
+		let MAX_ITERATIONS = 1000;
+
+		
+		ctx.beginPath();
+		ctx.rect(0,0,1000,1000);
+		ctx.fillStyle = "red";
+		ctx.fill();
+
+		function getColor(iterations) {
+			let num = iterations / MAX_ITERATIONS * 255;
+			return "#00" + Math.round(num).toString(16) + "00";
+		}
+
+		function drawPixel(x, y, col) {
+			ctx.beginPath();
+			ctx.rect(x,y,1,1);
+			ctx.fillStyle = col;
+			ctx.fill();
+		}
+
+		function getIterations(num) {
+			var z = math.complex(0,0)
+			for (var i = 0; i < MAX_ITERATIONS; i++) {
+				z = math.add(math.multiply(z,z), num);
+				if (z.toPolar().r > 2.0) return i;
+			}
+			return MAX_ITERATIONS;
+		}
+
+
+		let scale = 160*2;
+
+		let W = 1440;
+		let H = 960;
+
+		for (var x = 0; x < W; x++) {
+			for (var y = 0; y < H; y++) {
+				var num = math.complex((x - W / 2)/scale, (y - H / 2)/scale);
+				let color = getColor(getIterations(num));
+				if (color.length < "#000000".length) color = color + "0";
+				//console.log('TESTING ' + num + ' color ' + color);
+				drawPixel(x,y,color);
+			}
+		}
+	</script>
+
+    </body>
+</html>
